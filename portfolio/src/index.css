@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+@theme {
+  --color-void: #000000;
+  --color-panel: #0e110f;
+  --color-panel-2: #151916;
+  --color-line: #232a25;
+  --color-fg: #d2d8d4;
+  --color-dim: #8b978e;
+  --color-faint: #5b665e;
+  --color-phos: #7fb894;
+  --color-phos-dim: #3f6b4f;
+  --color-amber: #d9b26a;
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+:root {
+  --phos-rgb: 127, 184, 148;
+  color-scheme: dark;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(3.5rem + env(safe-area-inset-top, 0px));
+  background: var(--color-void);
+}
+body {
+  background: var(--color-void);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  background: var(--color-void);
+  z-index: 60;
+}
+::selection { background: var(--color-phos); color: #000; }
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-phos);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+/* faint dot grid: the workspace "desk" */
+.desk {
+  background-image: radial-gradient(rgba(var(--phos-rgb),0.032) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.cursor-block {
+  display: inline-block;
+  width: 0.42em;
+  height: 0.78em;
+  background: var(--color-phos);
+  vertical-align: -0.02em;
+  animation: blink 1.1s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+.glow { text-shadow: none; }
+
+.term-scroll { scrollbar-width: thin; scrollbar-color: var(--color-line) transparent; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .cursor-block { animation: none; }
+}
+
+/* keycaps: a lighter top face sitting on a darker base */
+.keycap {
+  background: linear-gradient(180deg, #2b312d 0%, #1f2420 100%);
+  border: 1px solid #39423c;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -6px 10px rgba(0, 0, 0, 0.35),
+    0 4px 0 #0e110f,
+    0 6px 14px rgba(0, 0, 0, 0.55);
+  transform: translateY(0);
+  transition: transform 80ms ease, box-shadow 80ms ease, border-color 150ms ease;
+}
+.keycap:hover { border-color: #4b5a50; }
+.keycap-down {
+  transform: translateY(3px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -3px 8px rgba(0, 0, 0, 0.4),
+    0 1px 0 #0e110f,
+    0 2px 6px rgba(0, 0, 0, 0.5);
+  border-color: #5c7a66;
+}
+@media (prefers-reduced-motion: reduce) {
+  .keycap { transition: none; }
+}
+
+/* accent themes: switch with `theme <name>`, the palette, or the t key */
+:root[data-accent="amber"] { --color-phos: #d6b06f; --color-phos-dim: #7a6232; --phos-rgb: 214, 176, 111; }
+:root[data-accent="ice"]   { --color-phos: #8fb6d8; --color-phos-dim: #3d5d78; --phos-rgb: 143, 182, 216; }
+:root[data-accent="mono"]  { --color-phos: #c9cfcb; --color-phos-dim: #5b625e; --phos-rgb: 201, 207, 203; }
+
